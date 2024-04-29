@@ -8,6 +8,10 @@
       "expo-router"
     ],
     "name": "DomoLink",
-    "slug": "DomoLink"
+    "slug": "DomoLink",
+    "androidStatusBar": {
+      "backgroundColor": "#27272d",
+      "translucent": true
+    }
   }
 }
