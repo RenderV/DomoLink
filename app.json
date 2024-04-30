@@ -12,6 +12,12 @@
     "androidStatusBar": {
       "backgroundColor": "#27272d",
       "translucent": true
+    },
+    "android": {
+      "package": "com.vertolis.DomoLinktest"
+    },
+    "ios": {
+      "bundleIdentifier": "com.vertolis.DomoLinktest"
     }
   }
 }

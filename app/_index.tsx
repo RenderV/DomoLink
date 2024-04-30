@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Navbar from '../components/navbar';
-import useTheme, { ColorTheme } from '../components/useStyle';
+import useTheme, { ColorTheme } from '../utils/useStyle';
 import { useMemo } from 'react';
 
 export default function Page() {

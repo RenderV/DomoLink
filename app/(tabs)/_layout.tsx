@@ -1,87 +1,174 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Tabs } from 'expo-router';
-import { Text, useWindowDimensions } from 'react-native';
-import { View } from 'react-native';
-import useTheme, { ColorBlack } from '../../components/useStyle';
-import Indicator from '../../components/Indicator';
-import { NavbarIcon } from '../../components/navbarIcon';
-import { transform } from 'typescript';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import useTheme, { ColorTheme } from '../../utils/useStyle';
+import { NavbarIcon } from '../../components/customBottomBar/navbarIcon';
+import { AnimatedIndicator } from '../../components/customBottomBar/indicator';
+import AnimatedCircle from '../../components/customBottomBar/circle';
 
 export default function TabLayout() {
+    return (
+        <CustomTab iconNames={["home", "setting"]}>
+            <Tabs.Screen
+                name="index"
+            />
+            <Tabs.Screen
+                name="settings"
+            />
+        </CustomTab>
+    )
+}
+
+export type ConfigType = {
+    barHeightPercentage: number,
+    indicatorScale: { w: number, h: number },
+    liftOffset: number,
+}
+
+type CustomTabProps = {
+    children: any,
+    config?: ConfigType,
+    iconNames: String[]
+}
+
+export function CustomTab({ config, iconNames, children }: CustomTabProps) {
+
+    if (iconNames.length !== children.length) {
+        throw new Error("Number of icons must match number of children")
+    }
+
     const colorscheme = useTheme()
-    const {height: wheight, width: wWidth} = useWindowDimensions()
 
-    const barHeightPercentage = 5
-    const barSize = (barHeightPercentage / 100) * wheight
-    const indicatorScale = { w: 1.4, h: 1.2 }
-    const indicatorSize = (barSize / 100 * barSize)
-    const indicatorOffset = (1 - indicatorScale.w) * indicatorSize / 2
+    const [currentScreen, setCurrentScreen] = useState<number>(0)
+    const previousScreen = useRef<number>(0)
 
-    const itemWidth = wWidth / 2
-    const circleRadius = wheight * barHeightPercentage / 100 / 2
+    useEffect(() => {
+        if (currentScreen !== previousScreen.current) {
+            previousScreen.current = currentScreen
+        }
+    }, [currentScreen])
 
-    const active: number = 1
-    const activeOffsetLeft = active * itemWidth - circleRadius - itemWidth / 2
+    config = config || {
+        barHeightPercentage: 5,
+        indicatorScale: { w: 1.5, h: 1.1 },
+        liftOffset: -28,
+    }
+
+    const windowWidth = useWindowDimensions().width
+    const windowHeight = useWindowDimensions().height
+
+    const barValues = {
+        barHeight: config.barHeightPercentage / 100 * windowHeight,
+        iconSize: config.barHeightPercentage * 4,
+        sectionWidth: windowWidth / children.length,
+    }
+
+    const indicatorValues = {
+        size: barValues.barHeight * config.indicatorScale.h,
+    }
+
+    const circleValues = {
+        diameter: barValues.barHeight,
+    }
+
+    const positionValues = {
+        indicatorOffset: (barValues.sectionWidth / 2 - (indicatorValues.size * config.indicatorScale.w) / 2) + currentScreen * barValues.sectionWidth,
+        circleOffset: barValues.sectionWidth * currentScreen + barValues.sectionWidth / 2 - circleValues.diameter / 2,
+    }
+
+    const styles = useMemo(() => makeTabStyleSheet(colorscheme, config), [colorscheme, config])
+
+    const icons = []
+
+    if (children instanceof Array) {
+        children.forEach((child, i) => {
+            icons.push({ key: child.props.name, iconName: iconNames[i] })
+        })
+    } else {
+        icons.push({ key: children.props.name, iconName: iconNames[0] })
+    }
 
     return (
         <>
-            <Tabs screenOptions={{
-                tabBarActiveTintColor: 'blue',
-                tabBarShowLabel: false,
-                tabBarStyle: {
-                    height: `${barHeightPercentage}%`,
-                    backgroundColor: colorscheme.primary,
-                    // borderRadius: 6,
-                    // borderEndEndRadius: 6,
-                    borderTopLeftRadius: 11,
-                    borderTopRightRadius: 11,
-                    position: "absolute",
-                    bottom: 0,
-                    borderWidth: 0,
-                    elevation: 0,
-                    overflow: "visible",
-                }
-            }}
+            <Tabs
+                screenListeners={{
+                    state: (state) => {
+                        setCurrentScreen(state.data['state'].index)
+                    }
+                }}
+                screenOptions={{
+                    tabBarActiveTintColor: 'blue',
+                    tabBarShowLabel: false,
+                    tabBarIconStyle: {
+                        display: 'none'
+                    },
+                    tabBarStyle: styles.tabBar,
+                }}
             >
-                <Tabs.Screen
-                    name="index"
-                    options={{
-                        tabBarIcon: ({ color }) => <NavbarIcon source="home" selected={active === 1} />,
-                    }}
-                />
-                <Tabs.Screen
-                    name="settings"
-                    options={{
-                        tabBarIcon: ({ color }) => <NavbarIcon source="setting" selected={active === 2} />,
-                    }}
-                />
+                {children}
             </Tabs>
-            <View style={{
-                height: `${barHeightPercentage}%`,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignContent: 'center',
-                width: "100%",
-                position: 'absolute',
-                bottom: 0,
-                zIndex: 10,
-                pointerEvents: 'none',
-            }}>
-                <Indicator
-                style={
-                    {
+            <View style={[styles.tabBar, styles.indicatorBar]}>
+                <AnimatedIndicator
+                    width={indicatorValues.size * config.indicatorScale.w}
+                    height={indicatorValues.size * config.indicatorScale.h}
+                    offset={positionValues.indicatorOffset}
+                    style={{
+                        top: 0,
                         position: 'absolute',
-                        zIndex: 10,
-                        left: activeOffsetLeft+indicatorOffset-4
                     }}
-                    width={barSize * indicatorScale.w}
-                    height={barSize * indicatorScale.h}>
-                </Indicator>
-            <NavbarIcon source="home" selected={active === 1}/>
-            <NavbarIcon source="setting" selected={active === 2}/>
+                    // enableAnimation={previousScreen.current > -1 && currentScreen !== previousScreen.current}
+                    enableAnimation={true}
+                />
+                <AnimatedCircle
+                    diameter={circleValues.diameter}
+                    color={colorscheme.accent}
+                    offset={positionValues.circleOffset}
+                    // enableAnimation={previousScreen.current > -1 && currentScreen !== previousScreen.current}
+                    enableAnimation={true}
+                    style={{
+                        top: config.liftOffset
+                    }}
+                />
+            </View>
+            <View style={[styles.tabBar, styles.fakeBar]}>
+                {icons.map((icon, i) => (
+                    <NavbarIcon source={icon.iconName} size={barValues.iconSize} key={i} selected={currentScreen === i} liftOffset={config.liftOffset} />
+                ))}
             </View>
         </>
     );
+}
+
+const makeTabStyleSheet = (colorscheme: ColorTheme, config: ConfigType) => {
+    return StyleSheet.create({
+        tabBar: {
+            height: `${config.barHeightPercentage}%`,
+            width: '100%',
+            backgroundColor: colorscheme.primary,
+            borderTopLeftRadius: 11,
+            borderTopRightRadius: 11,
+            position: "absolute",
+            bottom: 0,
+            borderWidth: 0,
+            elevation: 0,
+            overflow: "visible",
+            shadowOpacity: 1,
+            borderTopWidth: 0,
+            justifyContent: "space-around",
+        },
+        fakeBar: {
+            backgroundColor: 'transparent',
+            alignItems: 'center',
+            pointerEvents: 'none',
+            flexDirection: 'row',
+        },
+        indicatorBar: {
+            backgroundColor: 'transparent',
+            pointerEvents: 'none',
+            alignItems: 'baseline'
+        },
+        indicatorCircle: {
+            position: 'absolute'
+        }
+    })
 }
