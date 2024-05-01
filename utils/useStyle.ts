@@ -9,8 +9,8 @@ export type ColorTheme = {
 }
 
 export const ColorLight: ColorTheme = {
-    background: "#27272d",
-    primary: 'white',
+    background: "white",
+    primary: '#00ff69',
     accent: '#00ff69',
     iconsPrimary: "black",
     // iconsPrimary: "#00ff7c",
@@ -18,8 +18,8 @@ export const ColorLight: ColorTheme = {
 
 export const ColorBlack : ColorTheme = {
     primary: '#1f1f24',
-    accent: '#a704d8',
-    background: "#27272d",
+    accent: '#75009c',
+    background: "#171518",
     iconsPrimary: "white",
     // iconsPrimary: "#00ff7c",
 }
@@ -27,7 +27,8 @@ export const ColorBlack : ColorTheme = {
 const useTheme = () => {
     const colorScheme = useColorScheme();
     
-    return colorScheme === 'dark' ? ColorBlack : ColorLight
+    // return colorScheme === 'dark' ? ColorBlack : ColorLight
+    return ColorBlack
 };
 
 export default useTheme

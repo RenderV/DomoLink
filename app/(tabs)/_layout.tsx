@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Tabs } from 'expo-router';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, Text, useWindowDimensions, View, ViewStyle } from 'react-native';
 import useTheme, { ColorTheme } from '../../utils/useStyle';
 import { NavbarIcon } from '../../components/customBottomBar/navbarIcon';
 import { AnimatedIndicator } from '../../components/customBottomBar/indicator';
+import useKeyboardIsActive from '../../utils/useKeyboardActive';
+import HideView from '../../components/viewHide';
 
 export default function TabLayout() {
     return (
@@ -44,6 +46,8 @@ export function CustomTab({ config, iconNames, children }: CustomTabProps) {
     const [currentScreen, setCurrentScreen] = useState<number>(0)
     const previousScreen = useRef<number>(0)
 
+    const keyboardActive = useKeyboardIsActive()
+
     useEffect(() => {
         if (currentScreen !== previousScreen.current) {
             previousScreen.current = currentScreen
@@ -74,7 +78,7 @@ export function CustomTab({ config, iconNames, children }: CustomTabProps) {
     }
 
     const positionValues = {
-        indicatorOffset: (barValues.sectionWidth / 2)+ currentScreen * barValues.sectionWidth,
+        indicatorOffset: (barValues.sectionWidth / 2) + currentScreen * barValues.sectionWidth,
         circleOffset: barValues.sectionWidth * currentScreen + barValues.sectionWidth / 2 - circleValues.diameter / 2,
     }
 
@@ -89,6 +93,7 @@ export function CustomTab({ config, iconNames, children }: CustomTabProps) {
     } else {
         icons.push({ key: children.props.name, iconName: iconNames[0] })
     }
+
 
     return (
         <>
@@ -105,11 +110,16 @@ export function CustomTab({ config, iconNames, children }: CustomTabProps) {
                         display: 'none'
                     },
                     tabBarStyle: styles.tabBar,
+                    headerStyle: {
+                        backgroundColor: colorscheme.accent,
+                    },
+                    headerTitle: (props) => <View />,
+                    tabBarHideOnKeyboard: true,
                 }}
             >
                 {children}
             </Tabs>
-            <View style={[styles.tabBar, styles.indicatorBar]}>
+            <HideView style={[styles.tabBar, styles.indicatorBar]} hideOn={keyboardActive}>
                 <AnimatedIndicator
                     width={indicatorValues.size * config.indicatorScale.w}
                     height={indicatorValues.size * config.indicatorScale.h}
@@ -121,15 +131,14 @@ export function CustomTab({ config, iconNames, children }: CustomTabProps) {
                         position: 'absolute',
                     }}
                     circleOffset={config.liftOffset}
-                    // enableAnimation={previousScreen.current > -1 && currentScreen !== previousScreen.current}
                     enableAnimation={true}
                 />
-            </View>
-            <View style={[styles.tabBar, styles.fakeBar]}>
+            </HideView>
+            <HideView style={[styles.tabBar, styles.fakeBar]} hideOn={keyboardActive}>
                 {icons.map((icon, i) => (
                     <NavbarIcon source={icon.iconName} size={barValues.iconSize} key={i} selected={currentScreen === i} liftOffset={config.liftOffset} />
                 ))}
-            </View>
+            </HideView>
         </>
     );
 }
@@ -142,7 +151,6 @@ const makeTabStyleSheet = (colorscheme: ColorTheme, config: ConfigType) => {
             backgroundColor: colorscheme.primary,
             borderTopLeftRadius: 11,
             borderTopRightRadius: 11,
-            position: "absolute",
             bottom: 0,
             borderWidth: 0,
             elevation: 0,
@@ -152,12 +160,14 @@ const makeTabStyleSheet = (colorscheme: ColorTheme, config: ConfigType) => {
             justifyContent: "space-around",
         },
         fakeBar: {
+            position: "absolute",
             backgroundColor: 'transparent',
             alignItems: 'center',
             pointerEvents: 'none',
             flexDirection: 'row',
         },
         indicatorBar: {
+            position: "absolute",
             backgroundColor: 'transparent',
             pointerEvents: 'none',
             alignItems: 'baseline',
