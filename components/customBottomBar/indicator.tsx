@@ -1,6 +1,6 @@
 import useTheme from "../../utils/useStyle";
 import { Svg, Path } from "react-native-svg";
-import { Animated, Easing, ViewStyle } from "react-native";
+import { Animated, ColorValue, Easing, ViewStyle } from "react-native";
 import { useEffect, useRef } from "react";
 
 const Indicator = (props: any) => {
@@ -29,10 +29,13 @@ type AnimatedIndicatorProps = {
     offset: number,
     style: ViewStyle,
     enableAnimation: boolean,
+    diameter: number,
+    color: ColorValue,
+    circleOffset: number,
     props?: any,
 }
 
-export const AnimatedIndicator = ({ width, height, offset, style, enableAnimation, ...props }: AnimatedIndicatorProps) => {
+export const AnimatedIndicator = ({ width, height, offset, style, enableAnimation, diameter, color, circleOffset, ...props }: AnimatedIndicatorProps) => {
 
     const slideAnimation = useRef(new Animated.Value(offset)).current
 
@@ -40,24 +43,36 @@ export const AnimatedIndicator = ({ width, height, offset, style, enableAnimatio
         Animated.timing(slideAnimation, {
             easing: Easing.elastic(0.8),
             toValue: offset,
-            duration: enableAnimation ? 600 : 0,
+            duration: enableAnimation ? 500 : 0,
             useNativeDriver: true
         }).start()
     }, [slideAnimation, offset])
 
     return (
-        <Animated.View style={{
-            ...style,
-            transform: [{
-                translateX: enableAnimation ? slideAnimation : offset
-            }],
-        }}>
-            <Indicator
-                width={width}
-                height={height}
-                {...props}
-            />
-        </Animated.View>
+        <>
+            <Animated.View style={{
+                ...style,
+                transform: [{
+                    translateX: enableAnimation ? Animated.add(slideAnimation, -width/2) : offset
+                }],
+            }}>
+                <Indicator
+                    width={width}
+                    height={height}
+                    {...props}
+                />
+            </Animated.View>
+            <Animated.View style={[style, {
+                width: diameter,
+                height: diameter,
+                borderRadius: diameter / 2,
+                backgroundColor: color,
+                top: circleOffset,
+                transform: [{
+                    translateX: enableAnimation ? Animated.add(slideAnimation, -diameter/2-0.5) : offset,
+                }]
+            }]} {...props} />
+        </>
     )
 }
 

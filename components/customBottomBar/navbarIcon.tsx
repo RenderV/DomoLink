@@ -1,4 +1,4 @@
-import { Animated, Easing, GestureResponderEvent, GestureResponderHandlers, ImageProps, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from "react-native"
+import { Animated, Easing, GestureResponderEvent, GestureResponderHandlers, ImageProps, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, useColorScheme, View, ViewStyle } from "react-native"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useTheme, { ColorTheme } from "../../utils/useStyle"
 import { AntDesign } from '@expo/vector-icons';
@@ -18,6 +18,8 @@ export function NavbarIcon({ source, selected, size, liftOffset, ...props }: Nav
 
     const liftAnimation = useRef(new Animated.Value(translationY)).current
 
+    const colors = useTheme()
+
     useEffect(() => {
         Animated.timing(liftAnimation, {
             easing: Easing.elastic(1),
@@ -34,7 +36,7 @@ export function NavbarIcon({ source, selected, size, liftOffset, ...props }: Nav
             }]
         }]}>
             <TouchableOpacity {...props}>
-                <AntDesign name={source} size={size} color="white" />
+                <AntDesign name={source} size={size} color={colors.iconsPrimary} />
             </TouchableOpacity>
         </Animated.View>
     )

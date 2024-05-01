@@ -4,13 +4,15 @@ import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import useTheme, { ColorTheme } from '../../utils/useStyle';
 import { NavbarIcon } from '../../components/customBottomBar/navbarIcon';
 import { AnimatedIndicator } from '../../components/customBottomBar/indicator';
-import AnimatedCircle from '../../components/customBottomBar/circle';
 
 export default function TabLayout() {
     return (
-        <CustomTab iconNames={["home", "setting"]}>
+        <CustomTab iconNames={["home", "message1", "setting"]}>
             <Tabs.Screen
                 name="index"
+            />
+            <Tabs.Screen
+                name="chat"
             />
             <Tabs.Screen
                 name="settings"
@@ -72,7 +74,7 @@ export function CustomTab({ config, iconNames, children }: CustomTabProps) {
     }
 
     const positionValues = {
-        indicatorOffset: (barValues.sectionWidth / 2 - (indicatorValues.size * config.indicatorScale.w) / 2) + currentScreen * barValues.sectionWidth,
+        indicatorOffset: (barValues.sectionWidth / 2)+ currentScreen * barValues.sectionWidth,
         circleOffset: barValues.sectionWidth * currentScreen + barValues.sectionWidth / 2 - circleValues.diameter / 2,
     }
 
@@ -112,22 +114,15 @@ export function CustomTab({ config, iconNames, children }: CustomTabProps) {
                     width={indicatorValues.size * config.indicatorScale.w}
                     height={indicatorValues.size * config.indicatorScale.h}
                     offset={positionValues.indicatorOffset}
+                    diameter={circleValues.diameter}
+                    color={colorscheme.accent}
                     style={{
                         top: 0,
                         position: 'absolute',
                     }}
+                    circleOffset={config.liftOffset}
                     // enableAnimation={previousScreen.current > -1 && currentScreen !== previousScreen.current}
                     enableAnimation={true}
-                />
-                <AnimatedCircle
-                    diameter={circleValues.diameter}
-                    color={colorscheme.accent}
-                    offset={positionValues.circleOffset}
-                    // enableAnimation={previousScreen.current > -1 && currentScreen !== previousScreen.current}
-                    enableAnimation={true}
-                    style={{
-                        top: config.liftOffset
-                    }}
                 />
             </View>
             <View style={[styles.tabBar, styles.fakeBar]}>
@@ -165,10 +160,11 @@ const makeTabStyleSheet = (colorscheme: ColorTheme, config: ConfigType) => {
         indicatorBar: {
             backgroundColor: 'transparent',
             pointerEvents: 'none',
-            alignItems: 'baseline'
+            alignItems: 'baseline',
         },
         indicatorCircle: {
-            position: 'absolute'
+            position: 'absolute',
+            pointerEvents: 'none'
         }
     })
 }
