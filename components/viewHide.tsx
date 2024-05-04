@@ -4,11 +4,11 @@ import { View, Animated, ViewStyle } from 'react-native';
 interface ViewHideProps {
     hideOn: boolean;
     offset?: number;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     style?: any;
 }
 
-const HideView =  ({ hideOn, offset = 100, children, style }: ViewHideProps) => {
+const HideView = ({ hideOn, offset = 100, children, style }: ViewHideProps) => {
     const [offsetAnim] = useState(new Animated.Value(hideOn ? offset : 0));
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const HideView =  ({ hideOn, offset = 100, children, style }: ViewHideProps) => 
 
     return (
         <Animated.View
-            style={[{ transform: [{ translateY: offsetAnim }]}, style]}>
+            style={[{ transform: [{ translateY: offsetAnim }] }, style]}>
             {children}
         </Animated.View>
     );
