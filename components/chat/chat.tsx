@@ -9,7 +9,7 @@ import { EventHandler, useRef, useState } from 'react';
 
 export type MessageData = {
     origin: "user" | "other",
-    message: string,
+    message: string | JSX.Element,
     id: number
 }
 

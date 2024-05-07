@@ -6,8 +6,8 @@ export default function AppLayout() {
   return (
     <Stack
       screenOptions={{
-        statusBarStyle: 'dark',
-        statusBarColor: color.accent as string,
+        statusBarStyle: 'light',
+        statusBarColor: color.background as string,
       }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>

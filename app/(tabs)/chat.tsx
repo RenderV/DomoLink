@@ -3,13 +3,14 @@ import useTheme from '../../utils/useStyle';
 import { StyleSheet } from 'react-native';
 import { ColorTheme } from '../../utils/useStyle';
 import ConnectedChat from '../../components/chat/chatApi';
+import { useRouter } from 'expo-router';
+import { useRouteInfo } from 'expo-router/build/hooks';
 
 export default function Tab() {
   const colorscheme = useTheme();
   const styles = makeStyles(colorscheme);
   return (
     <View style={styles.container}>
-      <Text>Chat</Text>
       <ConnectedChat containerStyle={styles.messageContainer} />
     </View>
   );

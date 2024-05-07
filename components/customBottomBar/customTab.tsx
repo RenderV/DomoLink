@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Tabs } from 'expo-router';
+import { Tabs, useNavigation, useRouter } from 'expo-router';
 import { StyleSheet, Text, useWindowDimensions, View, ViewStyle } from 'react-native';
 import useTheme, { ColorTheme } from '../../utils/useStyle';
-import { NavbarIcon } from '../../components/customBottomBar/navbarIcon';
+import { NavbarIcon, NavbarIconProps } from '../../components/customBottomBar/navbarIcon';
 import { AnimatedIndicator } from '../../components/customBottomBar/indicator';
 import useKeyboardIsActive from '../../utils/useKeyboardActive';
 import HideView from '../../components/viewHide';
-import { Header } from '../header/header';
+import { useRoute } from '@react-navigation/native';
+import { useRouteInfo } from 'expo-router/build/hooks';
 
 export type ConfigType = {
     barHeightPercentage: number,
@@ -14,17 +15,24 @@ export type ConfigType = {
     liftOffset: number,
 }
 
+export type IconProps = {
+    size: number;
+    selected?: boolean;
+    props?: any;
+    liftOffset?: number;
+    style?: ViewStyle;
+};
+
 type CustomTabProps = {
     children: any,
     config?: ConfigType,
-    iconNames: String[]
+    icons: ((props: IconProps) => React.JSX.Element)[]
 }
 
-export default function CustomTab({ config, iconNames, children }: CustomTabProps) {
+export default function CustomTab({ config, children, icons }: CustomTabProps) {
 
-    if (iconNames.length !== children.length) {
-        throw new Error("Number of icons must match number of children")
-    }
+
+    if(icons.length !== children.length) throw new Error("The number of icons must match the number of children")
 
     const colorscheme = useTheme()
 
@@ -62,22 +70,11 @@ export default function CustomTab({ config, iconNames, children }: CustomTabProp
 
     const styles = useMemo(() => makeTabStyleSheet(colorscheme, config), [colorscheme, config])
 
-    const icons = []
-
-    if (children instanceof Array) {
-        children.forEach((child, i) => {
-            icons.push({ key: child.props.name, iconName: iconNames[i] })
-        })
-    } else {
-        icons.push({ key: children.props.name, iconName: iconNames[0] })
-    }
-
-
     return (
         // to implement this specific design, I'm using 'fake' icons and bars
-        // which are basically views and icons placed above the default bar with the functionality
+        // which are basically views and icons placed above the default bar with the behavior I want
         // They are controlled externally to the expo-router default bar
-        // so some of the functionality is lost, like the ability to hide the bar on keyboard open
+        // so some of the default functionality is lost, like the ability to hide the bar on keyboard open
         // but i implemented it manually.
 
         <>
@@ -86,7 +83,8 @@ export default function CustomTab({ config, iconNames, children }: CustomTabProp
             <Tabs
                 screenListeners={{
                     state: (state) => {
-                        setCurrentScreen(state.data['state'].index)
+                        if (state.data['state'].index !== currentScreen)
+                            setCurrentScreen(state.data['state'].index)
                     }
                 }}
                 screenOptions={{
@@ -96,11 +94,7 @@ export default function CustomTab({ config, iconNames, children }: CustomTabProp
                         display: 'none'
                     },
                     tabBarStyle: styles.tabBar,
-                    headerStyle: {
-                        backgroundColor: colorscheme.accent,
-                        height: 30,
-                    },
-                    // header: (props) => <Header title={props.route.name} />,
+                    headerShown: false,
                 }}
             >
                 {children}
@@ -121,9 +115,9 @@ export default function CustomTab({ config, iconNames, children }: CustomTabProp
                 />
             </HideView>
             <HideView style={[styles.tabBar, styles.fakeBar]} hideOn={keyboardActive}>
-                {icons.map((icon, i) => (
-                    <NavbarIcon source={icon.iconName} size={barValues.iconSize} key={i} selected={currentScreen === i} liftOffset={config.liftOffset} />
-                ))}
+                {icons.map((Icon, i) => {
+                    return <Icon key={i} size={barValues.iconSize} selected={currentScreen === i} liftOffset={config.liftOffset} />
+                })}
             </HideView>
             <HideView hideOn={keyboardActive} style={styles.backgroundBar} />
         </>
@@ -135,7 +129,6 @@ const makeTabStyleSheet = (colorscheme: ColorTheme, config: ConfigType) => {
         tabBar: {
             height: `${config.barHeightPercentage}%`,
             width: '100%',
-            // backgroundColor: colorscheme.primary,
             backgroundColor: 'transparent',
             backfaceVisibility: 'hidden',
             borderTopLeftRadius: 11,
@@ -160,7 +153,7 @@ const makeTabStyleSheet = (colorscheme: ColorTheme, config: ConfigType) => {
             position: "absolute",
             backgroundColor: 'transparent',
             alignItems: 'center',
-            pointerEvents: 'none',
+            pointerEvents: 'box-none',
             flexDirection: 'row',
         },
         indicatorBar: {

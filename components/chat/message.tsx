@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View, ViewStyle } from "react-native"
 import useTheme, { ColorTheme } from "../../utils/useStyle";
+import { Ionicons } from '@expo/vector-icons';
 
 type messageProps = {
     style?: ViewStyle
-    children?: string
+    children?: string | JSX.Element
     origin?: "user" | "other"
 }
 
@@ -15,9 +16,14 @@ export default function Message({ children, style, origin="other" }: messageProp
 
     return (
         <View style={[styles.messageContainer, originStyle, style]}>
-            <Text style={styles.text}>
+            {typeof children === 'string' && <Text style={styles.content}>
                 {children}
-            </Text>
+             </Text>}
+            {typeof children !== 'string' && 
+            <View style={styles.content}>
+                {children}
+            </View>
+            }
         </View>
     )
 }
@@ -47,7 +53,7 @@ const makeStyles = (colorscheme: ColorTheme) => {
             alignItems: 'flex-start',
             alignSelf: 'flex-start',
         },
-        text: {
+        content: {
             color: colorscheme.textColor,
             margin: 20,
         }
