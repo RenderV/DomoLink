@@ -6,6 +6,7 @@ import { IconProps } from '../../components/customBottomBar/customTab';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import useTheme from '../../utils/useStyle';
+import { ChatRecorder } from '../../components/chat/recording/chatRecorder';
 
 export default function TabLayout() {
     const colors = useTheme()
@@ -13,8 +14,8 @@ export default function TabLayout() {
         (props: IconProps) => <NavbarIcon {...props} source={"home"} />,
         (props: IconProps) => (
             <TransitionIcon
-                transitionFrom={<AntDesign size={props.size} name={"message1"} source={props.size} color={colors.iconsPrimary} />}
-                transitionTo={<Feather size={props.size} name={"mic"} source={props.size} color={colors.iconsPrimary} />}
+                transitionFrom={<AntDesign size={props.size} name={"message1"} color={colors.iconsPrimary} />}
+                transitionTo={<ChatRecorder size={props.size} color={colors.iconsPrimary}/>}
                 selected={props.selected}
                 liftOffset={props.liftOffset}
             />

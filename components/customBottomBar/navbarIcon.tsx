@@ -167,9 +167,7 @@ export function TransitionIcon({ transitionFrom, transitionTo, selected, liftOff
         ],
             pointerEvents: selected ? 'auto' : 'none',
         }]}>
-            <TouchableOpacity >
                 {icon}
-            </TouchableOpacity>
         </Animated.View>
     )
 }

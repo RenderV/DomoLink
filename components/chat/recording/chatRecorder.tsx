@@ -1,11 +1,20 @@
-import { Entypo } from '@expo/vector-icons';
-import { TouchableOpacity, TouchableNativeFeedback } from 'react-native';
+import { TouchableOpacity, TouchableNativeFeedback, ColorValue } from 'react-native';
 import { useState } from 'react';
 import { Audio } from 'expo-av';
+import { useChat } from '../chatContext';
+import { Feather } from '@expo/vector-icons';
+import useTheme from '../../../utils/useStyle';
 
-export function RecordingTest() {
+type ChatRecorderProps = {
+  size?: number,
+  color?: ColorValue,
+}
+
+export function ChatRecorder({ size=24, color='black' }: ChatRecorderProps) {
   const [recording, setRecording] = useState<Audio.Recording>();
   const [permissionResponse, requestPermission] = Audio.usePermissions();
+
+  const chat = useChat()
 
   async function startRecording() {
     try {
@@ -38,13 +47,17 @@ export function RecordingTest() {
       }
     );
     const uri = recording.getURI();
-    console.log('Recording stopped and stored at', uri);
+    chat.sendAudio(uri, "user")
   }
 
 
   return (
     <TouchableOpacity onPressIn={startRecording} onPressOut={stopRecording}>
-      <Entypo name="modern-mic" size={24} color="white" />
+      <Feather
+        name={"mic"}
+        size={size}
+        color={color}
+      />
     </TouchableOpacity>
   )
 }

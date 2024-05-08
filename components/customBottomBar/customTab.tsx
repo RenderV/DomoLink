@@ -1,13 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Tabs, useNavigation, useRouter } from 'expo-router';
-import { StyleSheet, Text, useWindowDimensions, View, ViewStyle } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { Tabs } from 'expo-router';
+import { StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native';
 import useTheme, { ColorTheme } from '../../utils/useStyle';
-import { NavbarIcon, NavbarIconProps } from '../../components/customBottomBar/navbarIcon';
 import { AnimatedIndicator } from '../../components/customBottomBar/indicator';
 import useKeyboardIsActive from '../../utils/useKeyboardActive';
 import HideView from '../../components/viewHide';
-import { useRoute } from '@react-navigation/native';
-import { useRouteInfo } from 'expo-router/build/hooks';
 
 export type ConfigType = {
     barHeightPercentage: number,

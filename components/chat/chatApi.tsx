@@ -1,26 +1,21 @@
 import { ViewStyle } from "react-native";
 import Chat, { MessageData } from "./chat";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import AudioPlayer from "./recording/audioPlayer";
+import { useChat } from "./chatContext";
 
 export type ConnectedChatProps = {
     containerStyle?: ViewStyle,
 }
 
 export default function ConnectedChat({ containerStyle }: ConnectedChatProps) {
-
-    const [messages, setMessages] = useState<MessageData[]>([
-        {
-            message: <AudioPlayer soundSource={require("@assets/audio/sample.mp3")} />,
-            origin: 'user',
-            id: 100
-        }
-    ])
+    const sound = require("@assets/audio/sample.mp3")
+    const chat = useChat()
 
     return <Chat containerStyle={containerStyle}
-        messages={messages}
+        messages={chat.messages}
         onSend={(message) => {
-            setMessages((prev) => [{ origin: "other", message, id: prev.length }, ...prev])
+            chat.sendText(message, "user")
         }}
     />
 }

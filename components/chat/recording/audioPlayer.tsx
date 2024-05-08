@@ -2,13 +2,16 @@ import { Animated, GestureResponderEvent, PanResponder, StyleSheet, Text, Toucha
 import { Ionicons } from '@expo/vector-icons';
 import useTheme, { ColorTheme } from "../../../utils/useStyle";
 import { useEffect, useRef, useState } from "react";
-import { Audio, AVPlaybackStatus, AVPlaybackStatusSuccess } from "expo-av";
+import { Audio, AVPlaybackSource, AVPlaybackStatusSuccess } from "expo-av";
 
 type AudioPlayerProps = {
-    soundSource: any,
+    soundSource?: string,
+    soundObject?: Audio.Sound,
 }
 
-export default function AudioPlayer({ soundSource }: AudioPlayerProps) {
+export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerProps) {
+    console.log(soundSource, soundObject)
+    if (!soundSource && !soundObject) throw new Error('No sound source provided')
     const colors = useTheme()
     const updateInterval = 100
     const pW = 200
@@ -31,15 +34,16 @@ export default function AudioPlayer({ soundSource }: AudioPlayerProps) {
     }, [progress])
 
     async function playSound() {
-        const { sound } = await Audio.Sound.createAsync(soundSource, { shouldPlay: false }, (status) => {
-            if (status.isLoaded) {
-                setStatus(status)
-                if (status.didJustFinish) {
-                    setStatus(null)
-                    setSound(null)
+        const { sound } = await Audio.Sound.createAsync((soundSource ? { uri: soundSource } : soundObject) as AVPlaybackSource,
+            { shouldPlay: false }, (status) => {
+                if (status.isLoaded) {
+                    setStatus(status)
+                    if (status.didJustFinish) {
+                        setStatus(null)
+                        setSound(null)
+                    }
                 }
-            }
-        });
+            });
         sound.setProgressUpdateIntervalAsync(updateInterval)
         setSound(sound);
         await sound?.playAsync()
