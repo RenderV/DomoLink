@@ -8,7 +8,7 @@ export type NavbarIconProps = {
     size: number;
     selected?: boolean;
     props?: any;
-    liftOffset?: number;
+    liftOffset: number;
     children?: ReactNode | ReactNode[];
 };
 

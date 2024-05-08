@@ -50,7 +50,7 @@ export function SubmitInput({ onSend }: { onSend: (message: string) => void }) {
 export type ChatProps = {
     containerStyle?: ViewStyle,
     messages?: MessageData[],
-    onSend?: (message: string) => void
+    onSend: (message: string) => void
     onEndReached?: () => void
 }
 

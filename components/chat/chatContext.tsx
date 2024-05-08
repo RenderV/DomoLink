@@ -16,7 +16,7 @@ type ChatContextType = {
 
 const ChatContext = React.createContext<ChatContextType | null>(null)
 
-export const ChatProvider = ({ children }) => {
+export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const [messages, setMessages] = React.useState<MessageData[]>([])
 
     const sendText = (text: string, origin: "user" | "other") => {

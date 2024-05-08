@@ -19,7 +19,7 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
 
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [status, setStatus] = useState<AVPlaybackStatusSuccess | null>(null);
-    const progress = status ? status.positionMillis / status.durationMillis : 0;
+    const progress = status && status.durationMillis ? status.positionMillis / status.durationMillis : 0;
 
     const icon = status?.isPlaying ? 'pause' : 'play';
 
@@ -50,6 +50,8 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
     }
 
     async function changeTimestamp(e: GestureResponderEvent) {
+        if(!status) return
+        if(!status?.durationMillis) throw new Error("Audio does not have duration data")
         const progress = e.nativeEvent.locationX / pW
         sound?.setPositionAsync(progress * status.durationMillis)
     }
@@ -110,7 +112,7 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
     )
 }
 
-const makeStyles = (colors: ColorTheme, progressWidth) => {
+const makeStyles = (colors: ColorTheme, progressWidth: number) => {
     return StyleSheet.create({
         container: {
             flexDirection: 'row',

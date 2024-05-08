@@ -18,7 +18,7 @@ export function ChatRecorder({ size=24, color='black' }: ChatRecorderProps) {
 
   async function startRecording() {
     try {
-      if (permissionResponse.status !== 'granted') {
+      if (permissionResponse?.status !== 'granted') {
         console.log('Requesting permission..');
         await requestPermission();
       }
@@ -40,6 +40,7 @@ export function ChatRecorder({ size=24, color='black' }: ChatRecorderProps) {
   async function stopRecording() {
     console.log('Stopping recording..');
     setRecording(undefined);
+    if(!recording) return
     await recording.stopAndUnloadAsync();
     await Audio.setAudioModeAsync(
       {
@@ -47,6 +48,7 @@ export function ChatRecorder({ size=24, color='black' }: ChatRecorderProps) {
       }
     );
     const uri = recording.getURI();
+    if(uri === null) throw new Error("couldn't save recording locally")
     chat.sendAudio(uri, "user")
   }
 

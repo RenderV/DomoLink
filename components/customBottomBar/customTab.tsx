@@ -14,9 +14,9 @@ export type ConfigType = {
 
 export type IconProps = {
     size: number;
-    selected?: boolean;
+    selected: boolean;
     props?: any;
-    liftOffset?: number;
+    liftOffset: number;
     style?: ViewStyle;
 };
 
@@ -26,10 +26,16 @@ type CustomTabProps = {
     icons: ((props: IconProps) => React.JSX.Element)[]
 }
 
+type ScreenListenerEventData = {
+    state: {
+        index: number;
+    }
+}
+
 export default function CustomTab({ config, children, icons }: CustomTabProps) {
 
 
-    if(icons.length !== children.length) throw new Error("The number of icons must match the number of children")
+    if (icons.length !== children.length) throw new Error("The number of icons must match the number of children")
 
     const colorscheme = useTheme()
 
@@ -80,8 +86,10 @@ export default function CustomTab({ config, children, icons }: CustomTabProps) {
             <Tabs
                 screenListeners={{
                     state: (state) => {
-                        if (state.data['state'].index !== currentScreen)
-                            setCurrentScreen(state.data['state'].index)
+                        if (!state.data) return
+                        const data = ((state.data as ScreenListenerEventData).state)
+                        if (data.index !== currentScreen)
+                            setCurrentScreen(data.index)
                     }
                 }}
                 screenOptions={{
