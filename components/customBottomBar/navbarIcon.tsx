@@ -21,7 +21,7 @@ export function NavbarIcon({ source, selected, size, liftOffset, ...props }: Nav
     const colors = useTheme()
 
     useEffect(() => {
-        const anim = Animated.timing(liftAnimation, {
+        Animated.timing(liftAnimation, {
             easing: Easing.elastic(1),
             toValue: translationY,
             duration: 600,

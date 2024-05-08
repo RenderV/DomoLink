@@ -20,6 +20,7 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [status, setStatus] = useState<AVPlaybackStatusSuccess | null>(null);
     const progress = status && status.durationMillis ? status.positionMillis / status.durationMillis : 0;
+    console.log(status)
 
     const icon = status?.isPlaying ? 'pause' : 'play';
 
@@ -33,25 +34,38 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
         }).start()
     }, [progress])
 
+    useEffect(() => {
+        if(!sound) return
+        // for some reason, the callback passed to createAsync is not called on browsers and on android after the update.
+        // so I'm using setInterval
+        const statusUpdater = setInterval(async () => {
+            const status = await sound.getStatusAsync();
+            if(status.isLoaded) setStatus(status)
+
+            if (status.isLoaded && status.didJustFinish) {
+                setStatus(null)
+                setSound(null)
+            }
+        }, updateInterval);
+        return () => {
+            clearInterval(statusUpdater)
+            sound.unloadAsync()
+        }
+
+    }, [sound])
+
     async function playSound() {
-        const { sound } = await Audio.Sound.createAsync((soundSource ? { uri: soundSource } : soundObject) as AVPlaybackSource,
-            { shouldPlay: false }, (status) => {
-                if (status.isLoaded) {
-                    setStatus(status)
-                    if (status.didJustFinish) {
-                        setStatus(null)
-                        setSound(null)
-                    }
-                }
-            });
-        sound.setProgressUpdateIntervalAsync(updateInterval)
+        const { sound } = await Audio.Sound.createAsync((soundSource ? { uri: soundSource } : soundObject) as AVPlaybackSource);
+
         setSound(sound);
+
         await sound?.playAsync()
     }
 
     async function changeTimestamp(e: GestureResponderEvent) {
-        if(!status) return
-        if(!status?.durationMillis) throw new Error("Audio does not have duration data")
+        if (!status) return
+        // durationMillis is infinity on the web
+        if (!status?.durationMillis || status?.durationMillis === Infinity) return
         const progress = e.nativeEvent.locationX / pW
         sound?.setPositionAsync(progress * status.durationMillis)
     }
@@ -75,14 +89,6 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
             sound?.playAsync()
         }
     }
-
-    useEffect(() => {
-        return sound
-            ? () => {
-                sound.unloadAsync();
-            }
-            : undefined;
-    }, [sound]);
 
     return (
         <View style={styles.container}>
