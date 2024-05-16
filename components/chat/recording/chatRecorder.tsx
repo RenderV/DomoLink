@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Audio } from 'expo-av';
 import { useChat } from '../chatContext';
 import { Feather } from '@expo/vector-icons';
-import useTheme from '../../../utils/useStyle';
 
 type ChatRecorderProps = {
   size?: number,

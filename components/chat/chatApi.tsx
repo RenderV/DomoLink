@@ -9,7 +9,6 @@ export type ConnectedChatProps = {
 }
 
 export default function ConnectedChat({ containerStyle }: ConnectedChatProps) {
-    const sound = require("@assets/audio/sample.mp3")
     const chat = useChat()
 
     return <Chat containerStyle={containerStyle}

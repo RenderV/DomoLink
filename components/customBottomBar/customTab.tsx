@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Tabs } from 'expo-router';
 import { StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native';
-import useTheme, { ColorTheme } from '../../utils/useStyle';
+import useColor, { ColorTheme } from '../../utils/useStyle';
 import { AnimatedIndicator } from '../../components/customBottomBar/indicator';
 import useKeyboardIsActive from '../../utils/useKeyboardActive';
 import HideView from '../../components/viewHide';
@@ -37,7 +37,7 @@ export default function CustomTab({ config, children, icons }: CustomTabProps) {
 
     if (icons.length !== children.length) throw new Error("The number of icons must match the number of children")
 
-    const colorscheme = useTheme()
+    const colorscheme = useColor()
 
     const [currentScreen, setCurrentScreen] = useState<number>(0)
 

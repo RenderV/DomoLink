@@ -1,10 +1,10 @@
-import useTheme from "../../utils/useStyle";
+import useColor from "../../utils/useStyle";
 import { Svg, Path } from "react-native-svg";
 import { Animated, ColorValue, Easing, ViewStyle } from "react-native";
 import { useEffect, useRef } from "react";
 
 const Indicator = (props: any) => {
-    const colorscheme = useTheme()
+    const colorscheme = useColor()
     return (
         <Svg
             viewBox="0 0 24 24"

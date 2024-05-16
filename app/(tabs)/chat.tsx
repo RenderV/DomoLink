@@ -1,13 +1,13 @@
 import { View, Text, TextInput } from 'react-native';
-import useTheme from '../../utils/useStyle';
+import useColor from '../../utils/useStyle';
 import { StyleSheet } from 'react-native';
 import { ColorTheme } from '../../utils/useStyle';
 import ConnectedChat from '../../components/chat/chatApi';
 import { useRouter } from 'expo-router';
 import { useRouteInfo } from 'expo-router/build/hooks';
 
-export default function Tab() {
-  const colorscheme = useTheme();
+export default function Chat() {
+  const colorscheme = useColor();
   const styles = makeStyles(colorscheme);
   return (
     <View style={styles.container}>

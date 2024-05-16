@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, ViewStyle, FlatList, GestureResponderEvent, NativeSyntheticEvent, TextInputTextInputEventData } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import useTheme from '../../utils/useStyle';
+import useColor from '../../utils/useStyle';
 import { StyleSheet } from 'react-native';
 import { ColorTheme } from '../../utils/useStyle';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,7 +14,7 @@ export type MessageData = {
 }
 
 export function SubmitInput({ onSend }: { onSend: (message: string) => void }) {
-    const colors = useTheme();
+    const colors = useColor();
     const styles = makeStyles(colors);
     const [message, setMessage] = useState<string>("")
     const textInputRef = useRef<TextInput>(null)
@@ -55,7 +55,7 @@ export type ChatProps = {
 }
 
 export default function Chat({ containerStyle, messages, onSend, onEndReached }: ChatProps) {
-    const colors = useTheme();
+    const colors = useColor();
     const styles = makeStyles(colors);
 
     return (

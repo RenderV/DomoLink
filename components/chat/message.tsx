@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ViewStyle } from "react-native"
-import useTheme, { ColorTheme } from "../../utils/useStyle";
+import useColor, { ColorTheme } from "../../utils/useStyle";
 import { Ionicons } from '@expo/vector-icons';
 
 type messageProps = {
@@ -9,7 +9,7 @@ type messageProps = {
 }
 
 export default function Message({ children, style, origin="other" }: messageProps) {
-    const colors = useTheme();
+    const colors = useColor();
     const styles = makeStyles(colors);
 
     let originStyle = origin === "user" ? styles.userMessage : styles.otherMessage;

@@ -1,6 +1,6 @@
-import { Animated, GestureResponderEvent, PanResponder, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Animated, GestureResponderEvent, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import useTheme, { ColorTheme } from "../../../utils/useStyle";
+import useColor, { ColorTheme } from "../../../utils/useStyle";
 import { useEffect, useRef, useState } from "react";
 import { Audio, AVPlaybackSource, AVPlaybackStatusSuccess } from "expo-av";
 
@@ -10,9 +10,8 @@ type AudioPlayerProps = {
 }
 
 export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerProps) {
-    console.log(soundSource, soundObject)
     if (!soundSource && !soundObject) throw new Error('No sound source provided')
-    const colors = useTheme()
+    const colors = useColor()
     const updateInterval = 100
     const pW = 200
     const styles = makeStyles(colors, pW)
@@ -20,7 +19,6 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [status, setStatus] = useState<AVPlaybackStatusSuccess | null>(null);
     const progress = status && status.durationMillis ? status.positionMillis / status.durationMillis : 0;
-    console.log(status)
 
     const icon = status?.isPlaying ? 'pause' : 'play';
 
@@ -35,12 +33,12 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
     }, [progress])
 
     useEffect(() => {
-        if(!sound) return
+        if (!sound) return
         // for some reason, the callback passed to createAsync is not called on browsers and on android after the update.
         // so I'm using setInterval
         const statusUpdater = setInterval(async () => {
             const status = await sound.getStatusAsync();
-            if(status.isLoaded) setStatus(status)
+            if (status.isLoaded) setStatus(status)
 
             if (status.isLoaded && status.didJustFinish) {
                 setStatus(null)
@@ -72,20 +70,16 @@ export default function AudioPlayer({ soundSource, soundObject }: AudioPlayerPro
 
     async function handleButtonClick() {
         if (!sound) {
-            console.log('sound not loaded')
             await playSound()
             return
         }
         if (progress === 1) {
-            console.log('restarting')
             sound?.replayAsync()
         }
         if (status?.isPlaying) {
-            console.log('pausing')
             sound?.pauseAsync()
         }
         if (status?.isLoaded && !status?.isPlaying) {
-            console.log('resuming')
             sound?.playAsync()
         }
     }

@@ -5,11 +5,11 @@ import { NavbarIcon, TransitionIcon } from '../../components/customBottomBar/nav
 import { IconProps } from '../../components/customBottomBar/customTab';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import useTheme from '../../utils/useStyle';
+import useColor from '../../utils/useStyle';
 import { ChatRecorder } from '../../components/chat/recording/chatRecorder';
 
 export default function TabLayout() {
-    const colors = useTheme()
+    const colors = useColor()
     const icons = [
         (props: IconProps) => <NavbarIcon {...props} source={"home"} />,
         (props: IconProps) => (

@@ -1,6 +1,6 @@
-import { Animated, Easing, GestureResponderEvent, GestureResponderHandlers, ImageProps, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, useColorScheme, View, ViewStyle } from "react-native"
+import { Animated, Easing, GestureResponderEvent, GestureResponderHandlers, ImageProps, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from "react-native"
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react"
-import useTheme, { ColorTheme } from "../../utils/useStyle"
+import useColor, { ColorTheme } from "../../utils/useStyle"
 import { AntDesign } from '@expo/vector-icons';
 
 export type NavbarIconProps = {
@@ -18,7 +18,7 @@ export function NavbarIcon({ source, selected, size, liftOffset, ...props }: Nav
 
     const liftAnimation = useRef(new Animated.Value(translationY)).current
 
-    const colors = useTheme()
+    const colors = useColor()
 
     useEffect(() => {
         Animated.timing(liftAnimation, {
@@ -54,7 +54,7 @@ interface TransitionIconProps {
 export function TransitionIcon({ transitionFrom, transitionTo, selected, liftOffset }: TransitionIconProps) {
 
     const [enableAnimation, setEnableAnimation] = useState(false)
-    const duration = 400
+    const duration = 300
     const [icon, setIcon] = useState(!selected ? transitionFrom : transitionTo)
 
     const translationY = selected ? liftOffset : 0
