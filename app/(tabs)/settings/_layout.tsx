@@ -1,5 +1,5 @@
 import useColor from '../../../utils/useStyle';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ColorTheme } from '../../../utils/useStyle';
 import { Stack } from 'expo-router';
 
@@ -9,6 +9,8 @@ export default function Tab() {
   return (
     <Stack screenOptions={{
       contentStyle: styles.container,
+      animation: "fade_from_bottom",
+      headerShown: false
     }}>
       <Stack.Screen name="index" options={{
         headerShown: false

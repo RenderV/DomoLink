@@ -18,13 +18,12 @@ export type ColorTheme = {
 }
 
 export const ColorLight: ColorTheme = {
-    primary: '32323b',
+    primary: '#1f1f24',
     secondary: '#32323b',
     accent: '#75009c',
     background: "white",
     iconsPrimary: "black",
     textColor: "black",
-    // iconsPrimary: "#00ff7c",
 }
 
 export const ColorBlack: ColorTheme = {
@@ -34,7 +33,6 @@ export const ColorBlack: ColorTheme = {
     background: "#171518",
     iconsPrimary: "white",
     textColor: "white",
-    // iconsPrimary: "#00ff7c",
 }
 
 const StyleContext = React.createContext<StyleContextType>({

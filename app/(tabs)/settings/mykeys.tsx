@@ -1,9 +1,9 @@
 import { Text, View } from "react-native";
 
-export default function Test() {
+export default function MyKeys() {
     return (
         <View>
-            <Text>hey</Text>
+            <Text>Keys</Text>
         </View>
     )
 }

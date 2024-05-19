@@ -1,23 +1,30 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import useColor, { ColorTheme } from "../../../utils/useStyle";
 import { Component, ReactElement } from "react";
 import { SettingContentProps } from "./settingContent";
+import { router } from "expo-router";
 
 type SettingChild = (ReactElement<SettingContentProps, typeof Component>)
 
 type SettingItemProp = {
     children: SettingChild | SettingChild[]
+    href?: string
 }
 
-export default function SettingRoot({ children }: SettingItemProp) {
+export default function SettingRoot({ children, href }: SettingItemProp) {
     const color = useColor()
     const styles = makeStyles(color)
+    const onPress = () => {
+        if(href) router.navigate(href)
+    }
     return (
-        <View style={styles.container}>
+        <Pressable style={styles.container} android_ripple={{
+            color: color.background,
+        }} onPress={onPress}>
             <View style={styles.content}>
                 {children}
             </View>
-        </View>
+        </Pressable>
     )
 }
 

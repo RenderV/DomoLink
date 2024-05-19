@@ -1,15 +1,16 @@
 import { Stack } from 'expo-router/stack';
-import useColor, { StyleProvider } from '../utils/useStyle';
+import useColor, { StyleProvider, useTheme } from '../utils/useStyle';
 import { ChatProvider } from '../components/chat/chatContext';
 
 export default function AppLayout() {
-  const color = useColor()
+  const theme = useTheme()
+  const color = theme.color
   return (
     <ChatProvider>
       <StyleProvider>
         <Stack
           screenOptions={{
-            statusBarStyle: 'light',
+            statusBarStyle: theme.mode,
             statusBarColor: color.background as string,
           }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

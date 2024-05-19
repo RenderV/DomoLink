@@ -12,7 +12,7 @@ export default function SettingIcon({ name }: SettingContentProps) {
 
     return (
         <View style={styles.icon}>
-            <MaterialCommunityIcons name="moon-waning-crescent" size={24} color={color.textColor} />
+            <MaterialCommunityIcons name={name as any} size={24} color={color.textColor} />
         </View>
     )
 }
