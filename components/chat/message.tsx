@@ -48,7 +48,7 @@ const makeStyles = (colorscheme: ColorTheme) => {
             alignSelf: 'flex-end',
         },
         otherMessage: {
-            backgroundColor: colorscheme.secondary,
+            backgroundColor: colorscheme.modeSecondary,
             borderTopLeftRadius: 0,
             alignItems: 'flex-start',
             alignSelf: 'flex-start',

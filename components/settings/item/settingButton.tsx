@@ -22,7 +22,7 @@ export default function SettingSwitch({ onValueChange, initialValue=false }: Set
     return (
         <View style={styles.container}>
             <Switch
-                trackColor={{ false: color.secondary, true: color.accent }}
+                trackColor={{ false: color.modeSecondary, true: color.accent }}
                 thumbColor={color.textColor}
                 onValueChange={toggleSwitch}
                 value={isEnabled}

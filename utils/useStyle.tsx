@@ -10,26 +10,29 @@ export type StyleContextType = {
 
 export type ColorTheme = {
     background: ColorValue,
-    primary: ColorValue,
-    secondary: ColorValue,
+    modePrimary: ColorValue,
+    modeSecondary: ColorValue,
     iconsPrimary: ColorValue,
     accent: ColorValue,
+    accentSecondary: ColorValue,
     textColor: ColorValue,
 }
 
 export const ColorLight: ColorTheme = {
-    primary: '#1f1f24',
-    secondary: '#32323b',
+    modePrimary: '#1f1f24',
+    modeSecondary: '#32323b',
     accent: '#75009c',
+    accentSecondary: '#9c04cf',
     background: "white",
     iconsPrimary: "black",
     textColor: "black",
 }
 
 export const ColorBlack: ColorTheme = {
-    primary: '#1f1f24',
-    secondary: '#32323b',
+    modePrimary: '#1f1f24',
+    modeSecondary: '#32323b',
     accent: '#75009c',
+    accentSecondary: '#9c04cf',
     background: "#171518",
     iconsPrimary: "white",
     textColor: "white",

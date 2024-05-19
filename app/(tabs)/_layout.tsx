@@ -25,10 +25,10 @@ export default function TabLayout() {
     return (
         <CustomTab icons={icons}>
             <Tabs.Screen
-                name="index"
+                name="home"
             />
             <Tabs.Screen
-                name="chat"
+                name="index"
             />
             <Tabs.Screen
                 name="settings"

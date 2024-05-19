@@ -89,7 +89,7 @@ const makeStyles = (colorscheme: ColorTheme) => {
         textInputContainer: {
             backgroundColor: colorscheme.background,
             color: colorscheme.iconsPrimary,
-            borderColor: colorscheme.primary,
+            borderColor: colorscheme.modePrimary,
             borderWidth: 1,
             borderRadius: 10,
             height: "100%",

@@ -39,7 +39,7 @@ export default function CustomTab({ config, children, icons }: CustomTabProps) {
 
     const colorscheme = useColor()
 
-    const [currentScreen, setCurrentScreen] = useState<number>(0)
+    const [currentScreen, setCurrentScreen] = useState<number>(1)
 
     const keyboardActive = useKeyboardIsActive()
 
@@ -151,7 +151,7 @@ const makeTabStyleSheet = (colorscheme: ColorTheme, config: ConfigType) => {
             height: `${config.barHeightPercentage}%`,
             position: "absolute",
             bottom: 0,
-            backgroundColor: colorscheme.primary,
+            backgroundColor: colorscheme.modePrimary,
             zIndex: -1
         },
         fakeBar: {

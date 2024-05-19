@@ -34,7 +34,7 @@ const makeStyles = (colorscheme: ColorTheme) => {
             container: {
                 height: 50,
                 width: "90%",
-                backgroundColor: colorscheme.primary,
+                backgroundColor: colorscheme.modePrimary,
                 borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',

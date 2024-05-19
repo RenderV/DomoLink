@@ -11,12 +11,6 @@ export default function Settings() {
     const style = makeStyles(color)
 
     return (
-        // <Link href="/settings/test" style={{
-        //     color: 'white',
-        // }}>
-        //     Go to Details
-        // </Link>
-        // <SettingItem/>
         <>
             <Profile size={70} />
             <Text style={style.personName}>
